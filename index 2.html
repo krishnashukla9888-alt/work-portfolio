@@ -1,0 +1,2439 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Krishna Shukla - Cinematic Video Editor & Designer Portfolio">
+
+    <title>Krishna Shukla | Visual Storyteller</title>
+
+
+
+    <!-- Google Fonts -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Oswald:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+
+
+    <style>
+        /* --- 1. CORE VARIABLES & RESET --- */
+
+        :root {
+
+            --bg-color: #030303;
+
+            --surface-color: #0a0a0a;
+
+            --text-primary: #f0f0f0;
+
+            --text-secondary: #888888;
+
+            --accent-red: #ff2a2a;
+            /* REC Red */
+
+            --accent-blue: #3b82f6;
+            /* Timeline Blue */
+
+            --grid-line: rgba(255, 255, 255, 0.03);
+
+            --easing: cubic-bezier(0.19, 1, 0.22, 1);
+            /* Expo Out */
+
+        }
+
+
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+
+
+        html {
+
+            font-size: 16px;
+
+            scroll-behavior: smooth;
+
+        }
+
+
+
+        body {
+
+            background-color: var(--bg-color);
+
+            color: var(--text-primary);
+
+            font-family: 'Manrope', sans-serif;
+
+            overflow-x: hidden;
+
+            width: 100%;
+
+            -webkit-font-smoothing: antialiased;
+
+            /* Default cursor for touch/fallback */
+
+            cursor: auto;
+
+        }
+
+
+
+        /* Wrap content for Skew Effect */
+
+        main {
+
+            transform-origin: center top;
+
+            transition: transform 0.1s linear;
+
+            will-change: transform;
+
+        }
+
+
+
+        /* Only hide cursor on fine-pointer devices (mouse) */
+
+        @media (pointer: fine) {
+
+            body {
+                cursor: none;
+            }
+
+            a,
+            button,
+            .hover-trigger {
+                cursor: none;
+            }
+
+        }
+
+
+
+        /* --- 2. CINEMATIC OVERLAYS --- */
+
+
+
+        /* Moving Film Grain */
+
+        .film-grain {
+
+            position: fixed;
+
+            top: -50%;
+
+            left: -50%;
+
+            width: 200%;
+
+            height: 200%;
+
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E");
+
+            animation: grain 8s steps(10) infinite;
+
+            pointer-events: none;
+
+            z-index: 9000;
+
+            opacity: 0.6;
+
+        }
+
+
+
+        @keyframes grain {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            10% {
+                transform: translate(-5%, -10%);
+            }
+
+            20% {
+                transform: translate(-15%, 5%);
+            }
+
+            30% {
+                transform: translate(7%, -25%);
+            }
+
+            40% {
+                transform: translate(-5%, 25%);
+            }
+
+            50% {
+                transform: translate(-15%, 10%);
+            }
+
+            60% {
+                transform: translate(15%, 0%);
+            }
+
+            70% {
+                transform: translate(0%, 15%);
+            }
+
+            80% {
+                transform: translate(3%, 35%);
+            }
+
+            90% {
+                transform: translate(-10%, 10%);
+            }
+
+        }
+
+
+
+        /* Heavy Vignette */
+
+        .vignette {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.9) 100%);
+
+            pointer-events: none;
+
+            z-index: 8999;
+
+        }
+
+
+
+        /* Background Grid */
+
+        .grid-bg {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            background-image:
+
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+
+            background-size: 80px 80px;
+
+            z-index: -1;
+
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+
+        }
+
+
+
+        /* Spotlight Effect */
+
+        .spotlight {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            pointer-events: none;
+
+            z-index: 1;
+
+            background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.06), transparent 40%);
+
+            mix-blend-mode: screen;
+
+        }
+
+
+
+        /* --- 3. CUSTOM CURSOR --- */
+
+        .cursor-dot,
+        .cursor-circle {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            transform: translate(-50%, -50%);
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            z-index: 10000;
+
+            mix-blend-mode: exclusion;
+
+            display: none;
+            /* Hidden by default */
+
+        }
+
+
+
+        @media (pointer: fine) {
+
+            .cursor-dot,
+            .cursor-circle {
+                display: block;
+            }
+
+        }
+
+
+
+        .cursor-dot {
+
+            width: 8px;
+
+            height: 8px;
+
+            background: white;
+
+        }
+
+
+
+        .cursor-circle {
+
+            width: 40px;
+
+            height: 40px;
+
+            border: 1px solid rgba(255, 255, 255, 0.5);
+
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+
+        }
+
+
+
+        body.hovering .cursor-circle {
+
+            width: 80px;
+
+            height: 80px;
+
+            background: rgba(255, 255, 255, 0.9);
+
+            border-color: transparent;
+
+            mix-blend-mode: difference;
+
+        }
+
+
+
+        body.hovering .cursor-dot {
+
+            opacity: 0;
+
+        }
+
+
+
+        /* --- 4. PRELOADER (FILM LEADER) --- */
+
+        .preloader {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            background: #000;
+
+            z-index: 99999;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            transition: transform 0.8s var(--easing);
+
+        }
+
+
+
+        .preloader.complete {
+
+            transform: translateY(-100%);
+
+        }
+
+
+
+        .countdown-wrap {
+
+            position: relative;
+
+            width: 200px;
+
+            height: 200px;
+
+            border: 2px solid #333;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+
+
+        .countdown-wrap::before,
+        .countdown-wrap::after {
+
+            content: '';
+
+            position: absolute;
+
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #333;
+
+        }
+
+        .countdown-wrap::after {
+
+            transform: rotate(90deg);
+
+        }
+
+
+
+        #countdown {
+
+            font-family: 'Oswald', sans-serif;
+
+            font-size: 6rem;
+
+            color: #fff;
+
+            font-weight: 700;
+
+        }
+
+
+
+        /* --- 5. TYPOGRAPHY & LAYOUT --- */
+
+        .container {
+
+            max-width: 1400px;
+
+            margin: 0 auto;
+
+            padding: 0 5vw;
+
+        }
+
+
+
+        section {
+
+            padding: 15vh 0;
+
+        }
+
+
+
+        h1,
+        h2,
+        h3 {
+
+            font-family: 'Oswald', sans-serif;
+
+            text-transform: uppercase;
+
+        }
+
+
+
+        .section-header {
+
+            font-size: clamp(3rem, 6vw, 7rem);
+
+            margin-bottom: 3rem;
+
+            line-height: 0.9;
+
+            position: relative;
+
+            display: inline-block;
+
+            color: transparent;
+
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+
+            transition: color 0.5s ease;
+
+        }
+
+
+
+        .section-header.in-view {
+
+            color: white;
+
+            -webkit-text-stroke: 0px;
+
+        }
+
+
+
+        .section-header::before {
+
+            content: attr(data-text);
+
+            position: absolute;
+
+            left: 0;
+            top: 0;
+
+            color: var(--accent-red);
+
+            width: 0%;
+
+            overflow: hidden;
+
+            white-space: nowrap;
+
+            transition: width 1s var(--easing);
+
+        }
+
+
+
+        .section-header.in-view::before {
+
+            width: 100%;
+            /* Fill effect on scroll */
+
+            opacity: 0.1;
+
+        }
+
+
+
+        /* --- 6. HERO SECTION & GLITCH --- */
+
+        .hero {
+
+            height: 100vh;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            position: relative;
+
+        }
+
+
+
+        .hero-title-row {
+
+            overflow: hidden;
+
+            line-height: 0.85;
+
+        }
+
+
+
+        .hero-title {
+
+            font-size: clamp(4rem, 14vw, 11rem);
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: -0.02em;
+
+            transform: translateY(120%);
+
+            display: block;
+
+            transition: transform 1.2s var(--easing);
+
+            mix-blend-mode: lighten;
+
+        }
+
+
+
+        .loaded .hero-title {
+
+            transform: translateY(0);
+
+        }
+
+
+
+        /* Glitch Animation Classes */
+
+        .glitch-text {
+
+            position: relative;
+
+            color: transparent;
+
+            -webkit-text-stroke: 2px #fff;
+
+        }
+
+
+
+        .glitch-text::before,
+
+        .glitch-text::after {
+
+            content: attr(data-glitch);
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            color: #fff;
+
+            background: var(--bg-color);
+
+            overflow: hidden;
+
+            opacity: 0.8;
+
+        }
+
+
+
+        .glitch-text::before {
+
+            left: 2px;
+
+            text-shadow: -1px 0 var(--accent-red);
+
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+
+        }
+
+
+
+        .glitch-text::after {
+
+            left: -2px;
+
+            text-shadow: -1px 0 var(--accent-blue);
+
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+
+        }
+
+
+
+        @keyframes glitch-anim-1 {
+
+            0% {
+                clip-path: inset(20% 0 80% 0);
+            }
+
+            20% {
+                clip-path: inset(60% 0 10% 0);
+            }
+
+            40% {
+                clip-path: inset(40% 0 50% 0);
+            }
+
+            60% {
+                clip-path: inset(80% 0 5% 0);
+            }
+
+            80% {
+                clip-path: inset(10% 0 60% 0);
+            }
+
+            100% {
+                clip-path: inset(30% 0 30% 0);
+            }
+
+        }
+
+
+
+        @keyframes glitch-anim-2 {
+
+            0% {
+                clip-path: inset(10% 0 60% 0);
+            }
+
+            20% {
+                clip-path: inset(80% 0 5% 0);
+            }
+
+            40% {
+                clip-path: inset(30% 0 20% 0);
+            }
+
+            60% {
+                clip-path: inset(10% 0 80% 0);
+            }
+
+            80% {
+                clip-path: inset(50% 0 30% 0);
+            }
+
+            100% {
+                clip-path: inset(0% 0 90% 0);
+            }
+
+        }
+
+
+
+
+
+        .hero-subtitle {
+
+            margin-top: 3rem;
+
+            font-size: 1rem;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.2em;
+
+            color: var(--accent-red);
+
+            opacity: 0;
+
+            transform: translateY(20px);
+
+            transition: opacity 1s ease 0.8s, transform 1s ease 0.8s;
+
+            display: flex;
+
+            gap: 20px;
+
+            align-items: center;
+
+        }
+
+        .hero-subtitle::before {
+
+            content: '';
+
+            width: 40px;
+
+            height: 1px;
+
+            background: var(--accent-red);
+
+        }
+
+
+
+        .loaded .hero-subtitle {
+
+            opacity: 1;
+
+            transform: translateY(0);
+
+        }
+
+
+
+        /* --- 7. MARQUEE STRIP --- */
+
+        .marquee-strip {
+
+            background: var(--accent-red);
+
+            color: black;
+
+            padding: 1rem 0;
+
+            overflow: hidden;
+
+            transform: rotate(-2deg);
+
+            width: 110vw;
+
+            margin-left: -5vw;
+
+            margin-bottom: 50px;
+
+            display: flex;
+
+            align-items: center;
+
+            border-top: 2px solid white;
+
+            border-bottom: 2px solid white;
+
+        }
+
+
+
+        .marquee-content {
+
+            display: flex;
+
+            white-space: nowrap;
+
+            animation: marquee 20s linear infinite;
+
+        }
+
+
+
+        .marquee-item {
+
+            font-family: 'Oswald', sans-serif;
+
+            font-weight: 700;
+
+            font-size: 1.5rem;
+
+            padding-right: 3rem;
+
+            text-transform: uppercase;
+
+        }
+
+
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+
+
+        /* --- 8. PROJECT GALLERY (PARALLAX & STAGGER) --- */
+
+        .work-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 4vw;
+
+            padding-bottom: 100px;
+
+        }
+
+
+
+        @media (max-width: 768px) {
+
+            .work-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+
+        .project-item {
+
+            position: relative;
+
+            margin-bottom: 60px;
+
+            opacity: 0;
+
+            transform: translateY(50px);
+
+            transition: opacity 0.8s var(--easing), transform 0.8s var(--easing);
+
+        }
+
+
+
+        /* Stagger Delays */
+
+        .project-item:nth-child(2) {
+            transition-delay: 0.1s;
+        }
+
+        .project-item:nth-child(3) {
+            transition-delay: 0.2s;
+        }
+
+        .project-item:nth-child(4) {
+            transition-delay: 0.3s;
+        }
+
+
+
+        .project-item.in-view {
+
+            opacity: 1;
+
+            transform: translateY(0);
+
+        }
+
+
+
+        /* Layout Stagger */
+
+        .work-grid .project-item:nth-child(2) {
+            margin-top: 150px;
+        }
+
+        @media (max-width: 768px) {
+            .work-grid .project-item:nth-child(2) {
+                margin-top: 0;
+            }
+        }
+
+
+
+        .project-thumb {
+
+            width: 100%;
+
+            aspect-ratio: 16/9;
+
+            overflow: hidden;
+
+            position: relative;
+
+            background: #111;
+
+            cursor: none;
+
+        }
+
+
+
+        .project-img {
+
+            width: 110%;
+            /* Slightly larger for parallax */
+
+            height: 110%;
+
+            object-fit: cover;
+
+            position: absolute;
+
+            top: -5%;
+            left: -5%;
+
+            filter: grayscale(100%) contrast(1.2);
+
+            transition: filter 0.5s ease, transform 0.1s linear;
+            /* Transform handled by JS */
+
+        }
+
+
+
+        .project-item:hover .project-img {
+
+            filter: grayscale(0%) contrast(1);
+
+        }
+
+
+
+        .project-overlay {
+
+            position: absolute;
+
+            inset: 0;
+
+            background: rgba(0, 0, 0, 0.3);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            opacity: 0;
+
+            transition: opacity 0.4s ease;
+
+        }
+
+
+
+        .project-item:hover .project-overlay {
+            opacity: 1;
+        }
+
+
+
+        .play-icon {
+
+            width: 80px;
+            height: 80px;
+
+            background: rgba(255, 255, 255, 0.1);
+
+            backdrop-filter: blur(10px);
+
+            border: 1px solid rgba(255, 255, 255, 0.5);
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            transform: scale(0.8);
+
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        }
+
+
+
+        .project-item:hover .play-icon {
+            transform: scale(1);
+        }
+
+
+
+        .play-icon::after {
+
+            content: '';
+
+            border-style: solid;
+
+            border-width: 10px 0 10px 18px;
+
+            border-color: transparent transparent transparent white;
+
+            margin-left: 4px;
+
+        }
+
+
+
+        .project-meta {
+
+            margin-top: 20px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-end;
+
+            border-bottom: 1px solid #333;
+
+            padding-bottom: 10px;
+
+        }
+
+
+
+        .project-title {
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 5px;
+        }
+
+        .project-cat {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .project-year {
+            font-family: 'Oswald', sans-serif;
+            color: var(--accent-red);
+            font-size: 1.2rem;
+        }
+
+
+
+        /* --- 9. RESUME (MINIMALIST) --- */
+
+        .resume-grid {
+
+            display: grid;
+
+            grid-template-columns: 1fr 2fr;
+
+            gap: 50px;
+
+            border-top: 1px solid #222;
+
+            padding-top: 60px;
+
+        }
+
+
+
+        @media (max-width: 768px) {
+            .resume-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+
+        .skill-group {
+            margin-bottom: 40px;
+        }
+
+        .skill-group h4 {
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            letter-spacing: 0.1em;
+        }
+
+
+
+        .skill-item {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 15px;
+
+            font-size: 1.1rem;
+
+            color: #ccc;
+
+        }
+
+
+
+        .progress-line {
+
+            width: 100px;
+
+            height: 2px;
+
+            background: #222;
+
+            position: relative;
+
+        }
+
+        .progress-fill {
+
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: #fff;
+
+            width: 0;
+            transition: width 1s ease 0.5s;
+
+        }
+
+        .in-view .progress-fill {
+            width: var(--w);
+        }
+
+
+
+        .timeline-item {
+
+            padding-left: 30px;
+
+            border-left: 1px solid #333;
+
+            position: relative;
+
+            margin-bottom: 60px;
+
+        }
+
+
+
+        .timeline-item::before {
+
+            content: '';
+
+            position: absolute;
+
+            left: -4px;
+            top: 8px;
+
+            width: 7px;
+            height: 7px;
+
+            background: var(--bg-color);
+
+            border: 2px solid var(--accent-red);
+
+            border-radius: 50%;
+
+            transition: background 0.3s;
+
+        }
+
+
+
+        .timeline-item:hover::before {
+            background: var(--accent-red);
+        }
+
+
+
+        .role-date {
+
+            font-family: 'Oswald', sans-serif;
+
+            font-size: 0.9rem;
+
+            color: var(--accent-blue);
+
+            margin-bottom: 5px;
+
+            display: block;
+
+        }
+
+
+
+        .role-title {
+
+            font-size: 2rem;
+
+            margin-bottom: 5px;
+
+        }
+
+
+
+        .role-place {
+
+            font-style: italic;
+
+            color: #777;
+
+            margin-bottom: 15px;
+
+        }
+
+
+
+        .role-desc li {
+
+            list-style: none;
+
+            color: #aaa;
+
+            margin-bottom: 5px;
+
+            font-size: 0.95rem;
+
+            position: relative;
+
+            padding-left: 15px;
+
+        }
+
+        .role-desc li::before {
+
+            content: '-';
+
+            position: absolute;
+            left: 0;
+            color: #555;
+
+        }
+
+
+
+        /* --- 10. FOOTER --- */
+
+        footer {
+
+            padding: 100px 0;
+
+            text-align: center;
+
+            background: #000;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+
+
+        .cta-big {
+
+            font-size: clamp(3rem, 8vw, 6rem);
+
+            font-family: 'Oswald', sans-serif;
+
+            text-transform: uppercase;
+
+            color: #fff;
+
+            text-decoration: none;
+
+            position: relative;
+
+            z-index: 2;
+
+            display: inline-block;
+
+            transition: color 0.3s;
+
+        }
+
+
+
+        .cta-big:hover {
+            color: var(--accent-red);
+        }
+
+
+
+        .footer-info {
+
+            margin-top: 50px;
+
+            color: #555;
+
+            font-size: 0.9rem;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+        }
+
+
+
+        .social-links {
+
+            margin-top: 30px;
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 30px;
+
+        }
+
+
+
+        .social-link {
+
+            color: #fff;
+
+            text-decoration: none;
+
+            text-transform: uppercase;
+
+            font-size: 0.8rem;
+
+            letter-spacing: 0.1em;
+
+            position: relative;
+
+            display: inline-block;
+
+            transition: transform 0.2s ease;
+
+        }
+
+
+
+        .social-link::after {
+
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent-red);
+            transition: width 0.3s;
+
+        }
+
+        .social-link:hover::after {
+            width: 100%;
+        }
+
+
+
+        /* --- 11. MODAL --- */
+
+        .modal {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0, 0, 0, 0.96);
+
+            z-index: 20000;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition: opacity 0.4s ease;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+        /* --- 12. SHORTFORM GRID --- */
+
+        .shorts-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 2vw;
+
+            padding-bottom: 100px;
+
+        }
+
+
+
+        @media (max-width: 768px) {
+
+            .shorts-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+
+        .shorts-thumb {
+
+            width: 100%;
+
+            aspect-ratio: 9/16;
+            /* Vertical Aspect Ratio */
+
+            overflow: hidden;
+
+            position: relative;
+
+            background: #111;
+
+            cursor: none;
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <!-- OVERLAYS -->
+
+    <div class="film-grain"></div>
+
+    <div class="vignette"></div>
+
+    <div class="grid-bg"></div>
+
+    <div class="spotlight" id="spotlight"></div>
+
+
+
+    <!-- CURSOR -->
+
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <div class="cursor-circle" id="cursor-circle"></div>
+
+
+
+    <!-- PRELOADER -->
+
+    <div class="preloader" id="preloader">
+
+        <div class="countdown-wrap">
+
+            <div id="countdown">5</div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MAIN CONTENT WRAPPER FOR SKEW EFFECT -->
+
+    <main id="main-content">
+
+        <!-- HERO SECTION -->
+
+        <section class="hero container">
+
+            <div class="hero-content">
+
+                <div class="hero-title-row">
+
+                    <span class="hero-title">Video</span>
+
+                </div>
+
+                <div class="hero-title-row">
+
+                    <!-- GLITCH EFFECT APPLIED HERE -->
+
+                    <span class="hero-title glitch-text" data-glitch="Editor">Editor</span>
+
+                </div>
+
+                <div class="hero-title-row">
+
+                    <span class="hero-title">& Designer</span>
+
+                </div>
+
+
+
+                <div class="hero-subtitle">
+
+                    <span>Krishna Shukla</span>
+
+                    <span style="color: #666;">//</span>
+
+                    <span>Visual Portfolio '26</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- LONGFORM SECTION -->
+
+        <section class="container" id="longform">
+
+            <h2 class="section-header" data-text="Longform">Longform</h2>
+
+
+
+            <div class="work-grid">
+
+                <!-- Project: Netflix Monster Ed Gein -->
+
+                <div class="project-item hover-trigger" data-type="video"
+                    data-src="https://www.youtube.com/embed/uRn9ouqf2NE?autoplay=1&mute=0">
+
+                    <div class="project-thumb">
+
+                        <img src="https://img.youtube.com/vi/uRn9ouqf2NE/maxresdefault.jpg"
+                            alt="Netflix Monster Ed Gein" class="project-img">
+
+                        <div class="project-overlay">
+
+                            <div class="play-icon"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-meta">
+
+                        <div>
+
+                            <h3 class="project-title">Netflix Monster: Ed Gein</h3>
+
+                            <p class="project-cat">Longform / Analysis</p>
+
+                        </div>
+
+                        <span class="project-year">2025</span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Project: The Diddy Documentary -->
+
+                <div class="project-item hover-trigger" data-type="video"
+                    data-src="https://www.youtube.com/embed/alzdGwOCIVs?autoplay=1&mute=0">
+
+                    <div class="project-thumb">
+
+                        <img src="https://img.youtube.com/vi/alzdGwOCIVs/maxresdefault.jpg" alt="The Diddy Documentary"
+                            class="project-img">
+
+                        <div class="project-overlay">
+
+                            <div class="play-icon"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-meta">
+
+                        <div>
+
+                            <h3 class="project-title">The Diddy Documentary</h3>
+
+                            <p class="project-cat">Longform / Deep Dive</p>
+
+                        </div>
+
+                        <span class="project-year">2025</span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Project: Rob Reiner Murder -->
+
+                <div class="project-item hover-trigger" data-type="video"
+                    data-src="https://www.youtube.com/embed/zrTGmQs-ttw?autoplay=1&mute=0">
+
+                    <div class="project-thumb">
+
+                        <img src="https://img.youtube.com/vi/zrTGmQs-ttw/maxresdefault.jpg" alt="Rob Reiner Murder"
+                            class="project-img">
+
+                        <div class="project-overlay">
+
+                            <div class="play-icon"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-meta">
+
+                        <div>
+
+                            <h3 class="project-title">Rob Reiner Murder</h3>
+
+                            <p class="project-cat">Longform / True Crime</p>
+
+                        </div>
+
+                        <span class="project-year">2025</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- SHORTFORM SECTION -->
+
+        <section class="container" id="shortform">
+
+            <h2 class="section-header" data-text="Shortform">Shortform</h2>
+
+
+
+            <div class="shorts-grid">
+
+                <!-- Short 1 -->
+
+                <div class="project-item hover-trigger" data-type="video"
+                    data-src="https://www.youtube.com/embed/0GWDERHNgVs?autoplay=1&mute=0">
+
+                    <div class="shorts-thumb">
+
+                        <img src="https://img.youtube.com/vi/0GWDERHNgVs/maxresdefault.jpg" alt="Short 1"
+                            class="project-img">
+
+                        <div class="project-overlay">
+
+                            <div class="play-icon"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-meta">
+
+                        <div>
+
+                            <h3 class="project-title">Viral Hook</h3>
+
+                            <p class="project-cat">Shorts / Pacing</p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Short 2 -->
+
+                <div class="project-item hover-trigger" data-type="video"
+                    data-src="https://www.youtube.com/embed/t_MjYSlTuMA?autoplay=1&mute=0">
+
+                    <div class="shorts-thumb">
+
+                        <img src="https://img.youtube.com/vi/t_MjYSlTuMA/maxresdefault.jpg" alt="Short 2"
+                            class="project-img">
+
+                        <div class="project-overlay">
+
+                            <div class="play-icon"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-meta">
+
+                        <div>
+
+                            <h3 class="project-title">Dynamic Edit</h3>
+
+                            <p class="project-cat">Shorts / VFX</p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Short 3 -->
+
+                <div class="project-item hover-trigger" data-type="video"
+                    data-src="https://www.youtube.com/embed/L9ire2kE1w0?autoplay=1&mute=0">
+
+                    <div class="shorts-thumb">
+
+                        <img src="https://img.youtube.com/vi/L9ire2kE1w0/maxresdefault.jpg" alt="Short 3"
+                            class="project-img">
+
+                        <div class="project-overlay">
+
+                            <div class="play-icon"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-meta">
+
+                        <div>
+
+                            <h3 class="project-title">Visual Story</h3>
+
+                            <p class="project-cat">Shorts / Sound</p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- DOCUMENTARY SECTION -->
+
+        <section class="container" id="documentary">
+
+            <h2 class="section-header" data-text="Documentary">Documentary</h2>
+
+
+
+            <div class="work-grid">
+
+                <!-- Project: DTU Documentary -->
+
+                <div class="project-item hover-trigger" data-type="video"
+                    data-src="https://www.youtube.com/embed/__Be4DRq5Xk?autoplay=1&mute=0">
+
+                    <div class="project-thumb">
+
+                        <img src="https://img.youtube.com/vi/__Be4DRq5Xk/maxresdefault.jpg" alt="DTU Documentary"
+                            class="project-img">
+
+                        <div class="project-overlay">
+
+                            <div class="play-icon"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-meta">
+
+                        <div>
+
+                            <h3 class="project-title">DTU Documentary</h3>
+
+                            <p class="project-cat">Documentary / Cinematic</p>
+
+                        </div>
+
+                        <span class="project-year">2024</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- RESUME SECTION -->
+
+        <section class="container" style="background: #050505; margin-bottom: 0; padding-bottom: 100px;">
+
+            <h2 class="section-header" data-text="Experience">Experience</h2>
+
+
+
+            <div class="resume-grid">
+
+                <!-- Left -->
+
+                <div class="skills-col">
+
+                    <div class="skill-group">
+
+                        <h4>TOOLKIT</h4>
+
+                        <div class="skill-item">
+
+                            <span>Premiere Pro</span>
+
+                            <div class="progress-line">
+                                <div class="progress-fill" style="--w: 100%"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="skill-item">
+
+                            <span>After Effects</span>
+
+                            <div class="progress-line">
+                                <div class="progress-fill" style="--w: 85%"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="skill-item">
+
+                            <span>Davinci Resolve</span>
+
+                            <div class="progress-line">
+                                <div class="progress-fill" style="--w: 70%"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="skill-group">
+
+                        <h4>FOCUS</h4>
+
+                        <div class="skill-item">Retention Editing</div>
+
+                        <div class="skill-item">Sound Design</div>
+
+                        <div class="skill-item">Visual Pacing</div>
+
+                    </div>
+
+
+
+                    <div class="skill-group">
+
+                        <h4>EDUCATION</h4>
+
+                        <div style="color: white; font-size: 1.1rem; margin-bottom: 5px;">B.Sc Animation & VFX</div>
+
+                        <div style="color: #666; font-size: 0.9rem;">Chandigarh University</div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Right -->
+
+                <div class="exp-col">
+
+                    <div class="timeline-item">
+
+                        <span class="role-date">JAN 2025 - PRESENT</span>
+
+                        <h3 class="role-title">Lead Video Editor</h3>
+
+                        <p class="role-place">YouTube Growth Agency</p>
+
+                        <ul class="role-desc">
+
+                            <li>Crafting high-retention narratives for channels with 1M+ subs.</li>
+
+                            <li>Implementing data-driven editing strategies to boost AVD.</li>
+
+                            <li>Managing workflow for 3 junior editors.</li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <div class="timeline-item">
+
+                        <span class="role-date">2023 - 2024</span>
+
+                        <h3 class="role-title">Editor & Graphic Designer</h3>
+
+                        <p class="role-place">Drishti Productions</p>
+
+                        <ul class="role-desc">
+
+                            <li>End-to-end post-production for corporate clients.</li>
+
+                            <li>Developed motion graphic templates (MOGRTs).</li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <div class="timeline-item">
+
+                        <span class="role-date">PROJECT BASED</span>
+
+                        <h3 class="role-title">Documentary Editor</h3>
+
+                        <p class="role-place">DTU (Delhi Technological University)</p>
+
+                        <ul class="role-desc">
+
+                            <li>Edited long-form documentary content.</li>
+
+                            <li>Color grading and audio mixing for broadcast standards.</li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- FOOTER -->
+
+        <footer>
+
+            <div class="container">
+
+                <p style="color: #666; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.2em;">Have a
+                    project?</p>
+
+                <a href="mailto:krishnashukla9888@gmail.com" class="cta-big hover-trigger magnetic">Let's Create.</a>
+
+
+
+                <div class="social-links">
+
+                    <a href="#" class="social-link hover-trigger magnetic">Instagram</a>
+
+                    <a href="#" class="social-link hover-trigger magnetic">LinkedIn</a>
+
+                    <a href="#" class="social-link hover-trigger magnetic">Twitter</a>
+
+                </div>
+
+
+
+                <div class="footer-info">
+
+                    <span>krishnashukla9888@gmail.com</span>
+
+                    <span>Punjab, India</span>
+
+                    <span style="opacity: 0.5; margin-top: 20px;">© 2026 Krishna Shukla</span>
+
+                </div>
+
+            </div>
+
+        </footer>
+
+    </main>
+
+
+
+    <!-- MODAL -->
+
+    <div class="modal" id="modal">
+
+        <div class="modal-container">
+
+            <div class="close-modal hover-trigger">CLOSE [ESC]</div>
+
+            <div id="modal-body" style="width: 100%; height: 100%;"></div>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        // --- 1. PRELOADER LOGIC ---
+
+        const preloader = document.getElementById('preloader');
+
+        const countdownEl = document.getElementById('countdown');
+
+        const hero = document.querySelector('.hero');
+
+
+
+        let count = 5;
+
+        const countInterval = setInterval(() => {
+
+            count--;
+
+            if (count > 0) {
+
+                countdownEl.innerText = count;
+
+            } else {
+
+                clearInterval(countInterval);
+
+                finishLoading();
+
+            }
+
+        }, 300); // Fast countdown
+
+
+
+        function finishLoading() {
+
+            preloader.classList.add('complete');
+
+            setTimeout(() => {
+
+                hero.classList.add('loaded');
+
+            }, 500);
+
+        }
+
+
+
+        // --- 2. CURSOR LOGIC ---
+
+        const cursorDot = document.getElementById('cursor-dot');
+
+        const cursorCircle = document.getElementById('cursor-circle');
+
+        const spotlight = document.getElementById('spotlight');
+
+
+
+        // Only run custom cursor logic if device supports fine pointer (mouse)
+
+        if (window.matchMedia("(pointer: fine)").matches) {
+
+            window.addEventListener('mousemove', (e) => {
+
+                const posX = e.clientX;
+
+                const posY = e.clientY;
+
+
+
+                // Instant dot movement
+
+                cursorDot.style.left = `${posX}px`;
+
+                cursorDot.style.top = `${posY}px`;
+
+
+
+                // Laggy circle movement
+
+                cursorCircle.animate({
+
+                    left: `${posX}px`,
+
+                    top: `${posY}px`
+
+                }, { duration: 500, fill: "forwards" });
+
+
+
+                // Update Spotlight Variables
+
+                spotlight.style.setProperty('--x', `${posX}px`);
+
+                spotlight.style.setProperty('--y', `${posY}px`);
+
+            });
+
+
+
+            // Hover States
+
+            document.querySelectorAll('.hover-trigger, a').forEach(el => {
+
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+
+            });
+
+
+
+            // --- MAGNETIC BUTTON EFFECT ---
+
+            document.querySelectorAll('.magnetic').forEach(btn => {
+
+                btn.addEventListener('mousemove', (e) => {
+
+                    const rect = btn.getBoundingClientRect();
+
+                    const x = e.clientX - rect.left - rect.width / 2;
+
+                    const y = e.clientY - rect.top - rect.height / 2;
+
+
+
+                    // Pull strength
+
+                    btn.style.transform = `translate(${x * 0.4}px, ${y * 0.4}px)`;
+
+                });
+
+
+
+                btn.addEventListener('mouseleave', () => {
+
+                    btn.style.transform = `translate(0px, 0px)`;
+
+                });
+
+            });
+
+        }
+
+
+
+        // --- 3. SCROLL ANIMATIONS & PARALLAX ---
+
+        const observerOptions = { threshold: 0.15 };
+
+
+
+        const observer = new IntersectionObserver((entries) => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.classList.add('in-view');
+
+                }
+
+            });
+
+        }, observerOptions);
+
+
+
+        document.querySelectorAll('.section-header, .project-item, .skill-item').forEach(el => {
+
+            observer.observe(el);
+
+        });
+
+
+
+        // Parallax & Skew Effect for Project Images
+
+        const mainContent = document.getElementById('main-content');
+
+        let currentScroll = 0;
+
+        let targetScroll = 0;
+
+
+
+        window.addEventListener('scroll', () => {
+
+            targetScroll = window.scrollY;
+
+
+
+            // Parallax on images
+
+            document.querySelectorAll('.project-item').forEach(item => {
+
+                const rect = item.getBoundingClientRect();
+
+                const img = item.querySelector('.project-img');
+
+
+
+                // Only animate if in viewport
+
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+
+                    // Calculate relative scroll position
+
+                    const speed = 0.1;
+
+                    const offset = (window.innerHeight - rect.top) * speed;
+
+                    img.style.transform = `translateY(${offset - 50}px) scale(1.1)`;
+
+                }
+
+            });
+
+        });
+
+
+
+        // Loop for Skew Velocity
+
+        function animateSkew() {
+
+            // Linear interpolation for smooth velocity check
+
+            currentScroll += (targetScroll - currentScroll) * 0.1;
+
+            const velocity = targetScroll - currentScroll;
+
+            const skew = Math.min(Math.max(velocity * 0.05, -5), 5); // Clamped between -5 and 5 deg
+
+
+
+            // Apply skew to main content
+
+            if (mainContent) {
+
+                mainContent.style.transform = `skewY(${skew}deg)`;
+
+            }
+
+
+
+            requestAnimationFrame(animateSkew);
+
+        }
+
+        animateSkew();
+
+
+
+
+
+        // --- 4. MODAL LOGIC ---
+
+        const modal = document.getElementById('modal');
+
+        const modalBody = document.getElementById('modal-body');
+
+        const closeModal = document.querySelector('.close-modal');
+
+
+
+        document.querySelectorAll('.project-item').forEach(item => {
+
+            item.addEventListener('click', () => {
+
+                const type = item.getAttribute('data-type');
+
+                const src = item.getAttribute('data-src');
+
+
+
+                modalBody.innerHTML = '';
+
+
+
+                if (type === 'video') {
+
+                    modalBody.innerHTML = `<iframe src="${src}" frameborder="0" allow="autoplay; fullscreen" style="width:100%; height:100%;"></iframe>`;
+
+                } else {
+
+                    modalBody.innerHTML = `<img src="${src}" style="width:100%; height:100%; object-fit:contain;">`;
+
+                }
+
+
+
+                modal.classList.add('active');
+
+            });
+
+        });
+
+
+
+        const closeFunc = () => {
+
+            modal.classList.remove('active');
+
+            // Slight delay to clear content so video stops playing
+
+            setTimeout(() => { modalBody.innerHTML = ''; }, 400);
+
+        }
+
+
+
+        closeModal.addEventListener('click', closeFunc);
+
+
+
+        // Close on background click
+
+        modal.addEventListener('click', (e) => {
+
+            if (e.target === modal) closeFunc();
+
+        });
+
+
+
+        // Close on ESC
+
+        document.addEventListener('keydown', (e) => {
+
+            if (e.key === "Escape" && modal.classList.contains('active')) closeFunc();
+
+        });
+
+
+
+    </script>
+
+</body>
+
+</html>
